@@ -1,0 +1,17 @@
+# This is a config for E2B sandbox template.
+# You can use template ID (1xzbs27c7zuiw1tnp8yx) or template name (evoweb-next-js-test2) to create a sandbox:
+
+# Python SDK
+# from e2b import Sandbox, AsyncSandbox
+# sandbox = Sandbox("evoweb-next-js-test2") # Sync sandbox
+# sandbox = await AsyncSandbox.create("evoweb-next-js-test2") # Async sandbox
+
+# JS SDK
+# import { Sandbox } from 'e2b'
+# const sandbox = await Sandbox.create('evoweb-next-js-test2')
+
+team_id = "80283672-850d-4bba-b609-b62bdc9b52ed"
+start_cmd = "/compile_page.sh"
+dockerfile = "e2b.Dockerfile"
+template_name = "evoweb-next-js-test2"
+template_id = "1xzbs27c7zuiw1tnp8yx"
