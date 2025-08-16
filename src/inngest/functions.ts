@@ -8,13 +8,13 @@ import {
 } from "@inngest/agent-kit";
 import { inngest } from "./client";
 import { Sandbox } from "@e2b/code-interpreter";
-import { getSandbox, lastAssistantTexMessageContent } from "./utils";
+import { getSandbox, lastAssistantTextMessageContent } from "./utils";
 import { PROMPT } from "@/prompt";
 import { prisma } from "@/lib/db";
 
 interface AgentState {
   summary: string;
-  files: {[path: string]: string};
+  files: { [path: string]: string };
 }
 
 export const codeAgentFunction = inngest.createFunction(
@@ -73,7 +73,10 @@ export const codeAgentFunction = inngest.createFunction(
               })
             ),
           }),
-          handler: async ({ files }, { step, network }: Tool.Options<AgentState>) => {
+          handler: async (
+            { files },
+            { step, network }: Tool.Options<AgentState>
+          ) => {
             const newFiles = await step?.run(
               "createOrUpdateFiles",
               async () => {
@@ -121,7 +124,7 @@ export const codeAgentFunction = inngest.createFunction(
       lifecycle: {
         onResponse: async ({ result, network }) => {
           const lastAssistantMessageText =
-            lastAssistantTexMessageContent(result);
+            lastAssistantTextMessageContent(result);
 
           if (lastAssistantMessageText && network) {
             if (lastAssistantMessageText.includes("<task_summary>")) {
@@ -162,6 +165,7 @@ export const codeAgentFunction = inngest.createFunction(
       if (isError) {
         return await prisma.message.create({
           data: {
+            projectId: event.data.projectId,
             content: "Something went wrong, please try again.",
             role: "ASSISTANT",
             type: "ERROR",
@@ -170,6 +174,7 @@ export const codeAgentFunction = inngest.createFunction(
       }
       return await prisma.message.create({
         data: {
+          projectId: event.data.projectId,
           content: result.state.data.summary,
           role: "ASSISTANT",
           type: "RESULT",
